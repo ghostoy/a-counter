@@ -1,0 +1,110 @@
+<polymer-element name="a-counter"
+		 attributes="value max-length pre post hold">
+
+	<template>
+		<style>
+
+		a-counter {
+			display: block;
+		}
+
+		a-counter[animation=fast] > #container > li > div {
+			transition: top 1s ease-in-out;
+		}
+
+		a-counter[animation=slow] > #container > li > div {
+			transition: top 4s ease-in-out;
+		}
+		
+		#container {
+			display: flex;
+			list-style: none;
+			margin: 0px;
+			padding: 0px;
+		}
+		#container > li {
+			flex: 1 1;
+			height: 100%;
+			overflow: hidden;
+			/*background: linear-gradient(0deg, black, white, black);*/
+		}
+		#container > li > div {
+			position: relative;
+			transition: top 2s ease-in-out;
+			text-align: center;
+		}
+		</style>
+		<ul id="container">
+		</ul>
+	</template>
+
+	<script>
+		Polymer('a-counter', {
+			value: 0,
+			"max-length": 3,
+			pre: '',
+			post: '',
+			hold: false,
+			valueChanged: function(oldValue, newValue){
+				if (Math.log(newValue)/Math.LN10>this['max-length']) {
+					this.value = oldValue;
+					return;
+				}
+
+				this.updateValue();
+			},
+			preChanged: function(oldValue, newValue) {
+				if (oldValue && newValue.length > oldValue.length) {
+					this.pre = newValue.substr(0, oldValue.length);
+				}
+			},
+			postChanged: function(oldValue, newValue) {
+				if (oldValue && newValue.length > oldValue.length) {
+					this.post = newValue.substr(0, oldValue.length);
+				}
+			},
+			ready: function() {
+				var container = this.$.container;
+				container.style.lineHeight = container.style.height = getComputedStyle(container)['font-size'];
+
+				var maxLength = this['max-length'];
+				var preLength = this.pre.length;
+				var postLength = this.post.length;
+
+				var digits = '<li><div class="num"><div>'+[0,1,2,3,4,5,6,7,8,9].join('</div><div>')+'</div></div></li>';
+				var nums = new Array(maxLength + preLength + postLength);
+				for(var i = 0; i < nums.length; i++) {
+					if (i < preLength) {
+						nums[i] = '<li><div>' + this.pre.substr(i, 1) + '</div></li>';
+					} else if (i >= preLength + maxLength) {
+						nums[i] = '<li><div>' + this.post.substr(i - preLength - maxLength, 1) + '</div></li>';
+					} else {
+						nums[i] = digits;
+					}
+				}
+				container.innerHTML = nums.join('');
+
+				this.preChanged('', this.pre);
+				this.postChanged('', this.post);
+				this.valueChanged(0, this.value);
+			},
+			unhold: function() {
+				this.hold = false;
+				this.updateValue();
+			},
+			updateValue: function() {
+				if (this.hold) return;
+				var value = parseInt(this.value);
+				var maxLength = parseInt(this['max-length']);
+				var preLength = this.pre.length;
+				var listItems = this.$.container.childNodes;
+				for(var i = 0; i < maxLength; i++) {
+					var d = value % 10;
+					listItems[maxLength + preLength - 1 - i].firstChild.style.top = '-' + ((value % 10) * 100) + '%';
+					value = Math.floor(value / 10);
+				}
+			}
+		});
+	</script>
+
+</polymer-element>

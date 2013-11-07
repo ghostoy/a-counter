@@ -2,18 +2,28 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>&lt;my-element&gt;</title>
+	<title>&lt;a-counter&gt;</title>
 
 	<!-- Importing Web Component's Polyfill -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20130711/polymer.min.js"></script>
 
 	<!-- Importing Custom Elements -->
-	<link rel="import" href="src/my-element.html">
+	<link rel="import" href="src/a-counter.html">
 </head>
 <body>
 
 	<!-- Using Custom Elements -->
-	<my-element></my-element>
-
+	<h3>Counter</h3>
+	<a-counter value="5555555555" max-length="10" style="font-size:64px;width:640px;"></a-counter>
+	<h3>Counter (animation=fast)</h3>
+	<a-counter value="123456789" max-length="10" animation="fast" style="font-size:64px;width:640px;"></a-counter>
+	<h3>Counter (pre=&euro;)</h3>
+	<a-counter value="123456789" pre="&euro;" max-length="9" style="font-size:64px;width:640px;"></a-counter>
+	<h3>Counter (post=$/lbs)</h3>
+	<a-counter value="12345" post="$/lbs" max-length="5" style="font-size:64px;width:640px;"></a-counter>
+	<h3>Counter (font-size=24px, font-family=sans-serif)</h3>
+	<a-counter value="13579" max-length="5" style="font-size:24px;font-family:sans-serif;width:120px;"></a-counter>
+	<h3>Counter (hold)</h3><a href="###" onclick="document.getElementById('hold').unhold()">Unhold</a>
+	<a-counter id="hold" value="123456789" max-length="10" hold style="font-size:64px;width:640px;"></a-counter>
 </body>
 </html>

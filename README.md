@@ -1,12 +1,12 @@
-# &lt;my-element&gt;
+# &lt;a-counter&gt;
 
 TODO: Write a project description
 
-> Maintained by [Your Name](https://github.com/yourname).
+> Maintained by [Cong Liu](https://github.com/ghostoy).
 
 ## Demo
 
-> [Check it live](http://customelements.github.io/boilerplate-element).
+> [Check it live](http://ghostoy.github.io/a-counter).
 
 ## Usage
 
@@ -19,23 +19,24 @@ TODO: Write a project description
 2. Import Custom Element:
 
 	```html
-	<link rel="import" href="src/my-element.html">
+	<link rel="import" href="src/a-counter.html">
 	```
 
 3. Start using it!
 
 	```html
-	<my-element></my-element>
+	<a-counter></a-counter>
 	```
 
 ## Options
 
 Attribute  | Options                   | Default             | Description
 ---        | ---                       | ---                 | ---
-`foo`      | *string*                  | `bar`               | Lorem ipsum
-`bar`      | `abc`, `def`, `ghi` 	   | `foo`               | Lorem ipsum
-`height`   | *int*                     | `100`               | Lorem ipsum
-
+`value`    | *int*                     | `0`                 | Value to display on the counter
+`max-length`| *int*				 	   | `3`               	 | Max length in digits
+`pre`      | *string*                  | `""`                | String to be displayed before the number
+`post`     | *string*                  | `""`                | String to be displayed after the number
+`hold`     | *boolean*                 | `false`             | Hold the animation on loaded or after the value changed.
 
 ## Contributing
 
@@ -47,7 +48,7 @@ Attribute  | Options                   | Default             | Description
 
 ## History
 
-* v0.0.1 August 19, 2013
+* v0.0.1 Nov 7, 2013
 	* Started project using [boilerplate-element](https://github.com/customelements/boilerplate-element)
 
 ## License
