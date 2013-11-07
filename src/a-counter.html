@@ -45,7 +45,8 @@
 			pre: '',
 			post: '',
 			hold: false,
-			valueChanged: function(oldValue, newValue){
+			valueChanged: function(oldValue){
+				var newValue = this.value;
 				if (Math.log(newValue)/Math.LN10>this['max-length']) {
 					this.value = oldValue;
 					return;
@@ -53,12 +54,14 @@
 
 				this.updateValue();
 			},
-			preChanged: function(oldValue, newValue) {
+			preChanged: function(oldValue) {
+				var newValut = this.pre;
 				if (oldValue && newValue.length > oldValue.length) {
 					this.pre = newValue.substr(0, oldValue.length);
 				}
 			},
-			postChanged: function(oldValue, newValue) {
+			postChanged: function(oldValue) {
+				var newValue = this.post;
 				if (oldValue && newValue.length > oldValue.length) {
 					this.post = newValue.substr(0, oldValue.length);
 				}
