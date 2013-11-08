@@ -4,15 +4,15 @@
 	<template>
 		<style>
 
-		a-counter {
+		:host {
 			display: block;
 		}
 
-		a-counter[animation=fast] > #container > li > div.num {
+		:host([animation=fast]) > #container > li > div.num {
 			transition: top 1s ease-in-out;
 		}
 
-		a-counter[animation=slow] > #container > li > div.num {
+		:host([animation=slow]) > #container > li > div.num {
 			transition: top 4s ease-in-out;
 		}
 		
@@ -36,7 +36,7 @@
 			overflow: hidden;
 			/*background: linear-gradient(0deg, black, white, black);*/
 		}
-		#container > li > div.num {
+		#container > li > div {
 			position: relative;
 			text-align: center;
 			transition: top 2s ease-in-out;
