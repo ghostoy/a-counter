@@ -13,7 +13,7 @@ TODO: Write a project description
 1. Import Web Components' polyfill:
 
 	```html
-	<script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20130711/polymer.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20131025/polymer.min.js"></script>
 	```
 
 2. Import Custom Element:
@@ -37,6 +37,7 @@ Attribute  | Options                   | Default             | Description
 `pre`      | *string*                  | `""`                | String to be displayed before the number
 `post`     | *string*                  | `""`                | String to be displayed after the number
 `hold`     | *boolean*                 | `false`             | Hold the animation on loaded or after the value changed.
+`animation`| *string*				   | `normal`			 | Speed of animation: slow (4s), normal (2s), fast (1s)
 
 ## Contributing
 
