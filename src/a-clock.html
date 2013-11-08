@@ -1,0 +1,54 @@
+<link rel="import" href="a-counter.html">
+<polymer-element name="a-clock" attributes="12hours">
+	<template>
+		<style>
+		:host {
+			display: -webkit-flex;
+			display: -moz-flex;
+			display: -ms-flex;
+			display: -o-flex;
+			display: flex;
+		}
+		:host > a-counter:first-child {
+			flex: 2 2;
+		}
+		:host > a-counter {
+			flex: 3 3;
+		}
+		:host > a-counter:last-child {
+			flex: 5 5;
+		}
+		</style>
+		<a-counter id="h" value="0" max-length="2" animation="super-fast"></a-counter>
+		<a-counter id="m" value="0" max-length="2" pre=":" animation="super-fast"></a-counter>
+		<a-counter id="s" value="0" max-length="2" pre=":" post="  " animation="super-fast"></a-counter>
+	</template>
+	<script>
+	Polymer('a-clock', {
+		'12hours': false,
+		ready: function() {
+			this.updateTime();
+		},
+		updateTime: function() {
+			var time = new Date();
+			var hours = time.getHours();
+			var ampm = this['12hours'];
+			if (ampm) {
+				if (hours < 12) {
+					this.$.s.post = 'AM';
+					this.$.h.value = hours === 0 ? 12 : hours;
+				} else {
+					this.$.s.post = 'PM';
+					this.$.h.value = hours - 12;
+				}
+			} else {
+				this.$.h.value = hours;
+			}
+			
+			this.$.m.value = time.getMinutes();
+			this.$.s.value = time.getSeconds();
+			setTimeout(this.updateTime.bind(this), 1000);
+		}
+	})
+	</script>
+</polymer-element>

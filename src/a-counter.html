@@ -6,6 +6,15 @@
 
 		:host {
 			display: block;
+			font-size: inherit;
+		}
+
+		:host([animation=none]) > #container > li > div.num {
+			transition: none;
+		}
+
+		:host([animation=super-fast]) > #container > li > div.num {
+			transition: top 0.5s ease-in-out;
 		}
 
 		:host([animation=fast]) > #container > li > div.num {
@@ -66,12 +75,24 @@
 				var newValue = this.pre;
 				if (oldValue && newValue.length > oldValue.length) {
 					this.pre = newValue.substr(0, oldValue.length);
+					return;
+				}
+				var childNodes = this.$.container.childNodes;
+				for(var i = 0; i < this.pre.length; i++) {
+					childNodes[i].firstChild.innerHTML = this.pre.charAt(i);
 				}
 			},
 			postChanged: function(oldValue) {
 				var newValue = this.post;
 				if (oldValue && newValue.length > oldValue.length) {
 					this.post = newValue.substr(0, oldValue.length);
+					return;
+				}
+
+				var offset = this['max-length'] + this.pre.length;
+				var childNodes = this.$.container.childNodes;
+				for(var i = 0; i < this.post.length; i++) {
+					childNodes[offset + i].firstChild.innerHTML = this.post.charAt(i);
 				}
 			},
 			holdChanged: function(oldValue) {
@@ -81,8 +102,18 @@
 			},
 			ready: function() {
 				var container = this.$.container;
-				var fontsize = container.style.lineHeight = container.style.height = document.defaultView.getComputedStyle(this).getPropertyValue('font-size');
+				var style = document.defaultView.getComputedStyle(this);
+				(function resize() {
+					if (!style.length) {
+						setTimeout(resize, 100);
+						return;
+					}
 
+					var fontSize = container.style.lineHeight = container.style.height = style.getPropertyValue('font-size');
+					// console.log(fontSize);
+
+				}());
+				
 				var maxLength = this['max-length'];
 				var preLength = this.pre.length;
 				var postLength = this.post.length;
@@ -91,9 +122,9 @@
 				var nums = new Array(maxLength + preLength + postLength);
 				for(var i = 0; i < nums.length; i++) {
 					if (i < preLength) {
-						nums[i] = '<li><div>' + this.pre.substr(i, 1) + '</div></li>';
+						nums[i] = '<li><div>' + this.pre.charAt(i) + '</div></li>';
 					} else if (i >= preLength + maxLength) {
-						nums[i] = '<li><div>' + this.post.substr(i - preLength - maxLength, 1) + '</div></li>';
+						nums[i] = '<li><div>' + this.post.charAt(i - preLength - maxLength) + '</div></li>';
 					} else {
 						nums[i] = digits;
 					}

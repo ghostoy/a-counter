@@ -10,6 +10,7 @@
 
 	<!-- Importing Custom Elements -->
 	<link rel="import" href="src/a-counter.html">
+	<link rel="import" href="src/a-clock.html">
 </head>
 <body>
 
@@ -30,14 +31,19 @@
 	<a href="javascript:rand('font')">Rand</a>
 	<a-counter id="font" value="13579" max-length="5" style="font-size:24px;font-family:sans-serif;width:120px;"></a-counter>
 	<h3>Counter (hold)</h3>
-	<a href="javascript:document.getElementById('hold').hold=false">Unhold</a>
+	<a href="javascript:unhold('hold')">Unhold</a>
 	<a href="javascript:rand('hold')">Rand</a>
 	<a-counter id="hold" value="123456789" max-length="10" hold style="font-size:64px;width:640px;"></a-counter>
+	<h3>Clock</h3>
+	<a-clock 12hours style="font-size:64px;width:550px;"></a-clock>
 
 	<script>
 	function rand(id) {
 		var el = document.getElementById(id);
 		el.value = Math.floor(Math.random() * Math.pow(10, parseInt(el.getAttribute('max-length'))));
+	}
+	function unhold(id) {
+		document.getElementById(id).hold=false;
 	}
 	</script>
 </body>
