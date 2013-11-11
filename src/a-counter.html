@@ -117,20 +117,14 @@
 					this.updateValue();
 				}
 			},
-			ready: function() {
+			enteredView: function() {
 				var container = this.$.container;
 				var style = document.defaultView.getComputedStyle(this);
-				(function resize() {
-					if (!style.length) {
-						setTimeout(resize, 100);
-						return;
-					}
+				var fontSize = container.style.lineHeight = container.style.height = style.getPropertyValue('font-size');
+			},
+			ready: function() {
+				var container = this.$.container;
 
-					var fontSize = container.style.lineHeight = container.style.height = style.getPropertyValue('font-size');
-					// console.log(fontSize);
-
-				}());
-				
 				var maxLength = this['max-length'];
 				var preLength = this.pre.length;
 				var postLength = this.post.length;
