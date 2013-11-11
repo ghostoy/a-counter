@@ -3,20 +3,33 @@
 	<template>
 		<style>
 		:host {
-			display: -webkit-flex;
-			display: -moz-flex;
-			display: -ms-flex;
-			display: -o-flex;
-			display: flex;
+			display	: -webkit-flex;
+			display	: -moz-flex;
+			display	: -ms-flex;
+			display	: -ms-flexbox;
+			display	: -o-flex;
+			display	: flex;
 		}
 		:host > a-counter:first-child {
-			flex: 2 2;
+			-webkit-flex: 2 2;
+			-moz-flex	: 2 2;
+			-ms-flex 	: 2 2;
+			-o-flex 	: 2 2;
+			flex 		: 2 2;
 		}
 		:host > a-counter {
-			flex: 3 3;
+			-webkit-flex: 3 3;
+			-moz-flex 	: 3 3;
+			-ms-flex 	: 3 3;
+			-o-flex		: 3 3;
+			flex 		: 3 3;
 		}
 		:host > a-counter:last-child {
-			flex: 5 5;
+			-webkit-flex: 5 5;
+			-moz-flex	: 5 5;
+			-ms-flex 	: 5 5;
+			-o-flex 	: 5 5;
+			flex 		: 5 5;
 		}
 		</style>
 		<a-counter id="h" value="0" max-length="2" animation="super-fast"></a-counter>

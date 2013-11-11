@@ -5,50 +5,67 @@
 		<style>
 
 		:host {
-			display: block;
-			font-size: inherit;
+			display	: block;
 		}
 
 		:host([animation=none]) > #container > li > div.num {
-			transition: none;
+			transition	: none;
 		}
 
 		:host([animation=super-fast]) > #container > li > div.num {
-			transition: top 0.5s ease-in-out;
+			transition	: -webkit-transform 0.5s ease-in-out;
+			transition	: -moz-transform 0.5s ease-in-out;
+			transition	: -ms-transform 0.5s ease-in-out;
+			transition	: -o-transform 0.5s ease-in-out;
+			transition	: transform 0.5s ease-in-out;
 		}
 
 		:host([animation=fast]) > #container > li > div.num {
-			transition: top 1s ease-in-out;
+			transition	: -webkit-transform 1s ease-in-out;
+			transition	: -moz-transform 1s ease-in-out;
+			transition	: -ms-transform 1s ease-in-out;
+			transition	: -o-transform 1s ease-in-out;
+			transition	: transform 1s ease-in-out;
 		}
 
 		:host([animation=slow]) > #container > li > div.num {
-			transition: top 4s ease-in-out;
+			transition	: -webkit-transform 4s ease-in-out;
+			transition	: -moz-transform 4s ease-in-out;
+			transition	: -ms-transform 4s ease-in-out;
+			transition	: -o-transform 4s ease-in-out;
+			transition	: transform 4s ease-in-out;
 		}
 		
 		#container {
-			display: -webkit-flex;
-			display: -moz-flex;
-			display: -ms-flex;
-			display: -o-flex;
-			display: flex;
-			list-style: none;
-			margin: 0px;
-			padding: 0px;
+			display		: -webkit-flex;
+			display		: -moz-flex;
+			display		: -ms-flex;
+			display 	: -ms-flexbox;
+			display 	: -o-flex;
+			display 	: flex;
+			list-style 	: none;
+			margin 		: 0px;
+			padding 	: 0px;
 		}
 		#container > li {
 			-webkit-flex: 1 1;
-			-moz-flex: 1 1;
-			-ms-flex: 1 1;
-			-o-flex: 1 1;
-			flex: 1 1;
-			height: 100%;
-			overflow: hidden;
-			/*background: linear-gradient(0deg, black, white, black);*/
+			-moz-flex	: 1 1;
+			-ms-flex 	: 1 1;
+			-o-flex		: 1 1;
+			flex 		: 1 1;
+			height 		: 100%;
+			overflow 	: hidden;
+			/*background: linear-gradient(0deg, rgba(0,0,0,0.5), rgba(255,255,255,0.5), rgba(0,0,0,0.5));*/
 		}
 		#container > li > div {
-			position: relative;
-			text-align: center;
-			transition: top 2s ease-in-out;
+			position	: relative;
+			text-align	: center;
+			top 		: 0px;
+			transition	: -webkit-transform 2s ease-in-out;
+			transition	: -moz-transform 2s ease-in-out;
+			transition	: -ms-transform 2s ease-in-out;
+			transition	: -o-transform 2s ease-in-out;
+			transition	: transform 2s ease-in-out;
 		}
 		</style>
 		<ul id="container">
@@ -144,8 +161,18 @@
 				var listItems = this.$.container.childNodes;
 				for(var i = 0; i < maxLength; i++) {
 					var d = value % 10;
-					listItems[maxLength + preLength - 1 - i].firstChild.style.top = '-' + ((value % 10) * 100) + '%';
+					var el = listItems[maxLength + preLength - 1 - i].firstChild;
+					translateY(el, value % 10);
 					value = Math.floor(value / 10);
+				}
+
+				function translateY(el, value) {
+					el.style.webkitTransform
+					= el.style.mozTransform
+					= el.style.msTransform
+					= el.style.oTransform
+					= el.style.transform
+					= 'translateY(-'+(value*10)+'%)';
 				}
 			}
 		});
