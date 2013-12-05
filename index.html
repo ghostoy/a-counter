@@ -6,7 +6,7 @@
 
 	<!-- Importing Web Component's Polyfill -->
 	<!--script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20130711/polymer.min.js"></script-->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20131025/polymer.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20131107/polymer.min.js"></script>
 
 	<!-- Importing Custom Elements -->
 	<link rel="import" href="src/a-counter.html">
@@ -34,8 +34,10 @@
 	<a href="javascript:unhold('hold')">Unhold</a>
 	<a href="javascript:rand('hold')">Rand</a>
 	<a-counter id="hold" value="1234567890" pattern="[0-9]{10}" hold style="font-size:64px;width:640px;"></a-counter>
-	<!-- <h3>Clock</h3>
-	<a-clock 12hours style="font-size:64px;width:550px;"></a-clock> -->
+	<h3>Clock (12hours)</h3>
+	<a-clock 12hours style="font-size:64px;width:640px;"></a-clock>
+	<h3>Clock (24hours)</h3>
+	<a-clock style="font-size:64px;width:512px;"></a-clock>
 
 	<script>
 	function rand(id) {
@@ -44,6 +46,16 @@
 	function unhold(id) {
 		document.getElementById(id).hold=false;
 	}
+
+	// function clock() {
+	// 	var now = new Date();
+	// 	var h = now.getHours();
+	// 	var m = now.getMinutes();
+	// 	var s = now.getSeconds();
+	// 	document.getElementById('clock').value = [h, m, s].map(function align(d) {return d<10 ? '0' + d: d;}).join(':');
+	// }
+	// setInterval(clock, 1000);
+	
 	</script>
 </body>
 </html>

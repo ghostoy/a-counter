@@ -10,31 +10,23 @@
 			display	: -o-flex;
 			display	: flex;
 		}
-		#h {
+		#time {
+			-webkit-flex: 8 8;
+			-moz-flex: 8 8;
+			-ms-flex: 8 8;
+			-o-flex: 8 8;
+			flex: 8 8;
+		}
+		#ampm {
 			-webkit-flex: 2 2;
-			-moz-flex	: 2 2;
-			-ms-flex 	: 2 2;
-			-o-flex 	: 2 2;
-			flex 		: 2 2;
-		}
-		#m {
-			-webkit-flex: 3 3;
-			-moz-flex 	: 3 3;
-			-ms-flex 	: 3 3;
-			-o-flex		: 3 3;
-			flex 		: 3 3;
-		}
-		#s {
-			-webkit-flex: 5 5;
-			-moz-flex	: 5 5;
-			-ms-flex 	: 5 5;
-			-o-flex 	: 5 5;
-			flex 		: 5 5;
+			-moz-flex: 2 2;
+			-ms-flex: 2 2;
+			-o-flex: 2 2;
+			flex: 2 2;
 		}
 		</style>
-		<a-counter id="h" value="0" max-length="2" animation="super-fast"></a-counter>
-		<a-counter id="m" value="0" max-length="2" pre=":" animation="super-fast"></a-counter>
-		<a-counter id="s" value="0" max-length="2" pre=":" post="  " animation="super-fast"></a-counter>
+		<a-counter id="time" animation="super-fast" value="" pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"></a-counter>
+		<a-counter id="ampm" animation="super-fast" value="" pattern="[AP]M"></a-counter>
 	</template>
 	<script>
 	Polymer('a-clock', {
@@ -45,21 +37,29 @@
 		updateTime: function() {
 			var time = new Date();
 			var hours = time.getHours();
-			var ampm = this['12hours'];
-			if (ampm) {
+			var ampm = false;
+			if (this['12hours']) {
 				if (hours < 12) {
-					this.$.s.post = 'AM';
-					this.$.h.value = hours === 0 ? 12 : hours;
+					hours = hours === 0 ? 12 : hours;
+					ampm = 'AM';
 				} else {
-					this.$.s.post = 'PM';
-					this.$.h.value = hours - 12;
+					hours = hours - 12;
+					ampm = 'PM';
 				}
-			} else {
-				this.$.h.value = hours;
 			}
 			
-			this.$.m.value = time.getMinutes();
-			this.$.s.value = time.getSeconds();
+			this.$.time.value = [hours, time.getMinutes(), time.getSeconds()]
+									.map(function(n) {
+										return n<10 ? '0'+n:n;
+									})
+									.join(':');
+			if (!ampm) {
+				this.$.ampm.style.display = 'none';
+			} else {
+				this.$.ampm.style.display = 'block';
+				this.$.ampm.value = ampm;
+			}
+
 			setTimeout(this.updateTime.bind(this), 1000);
 		}
 	})

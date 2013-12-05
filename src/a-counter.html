@@ -8,11 +8,11 @@
 			display	: block;
 		}
 
-		:host([animation=none]) > #container > li > div.num {
+		:host([animation=none]) > #container > li > div {
 			transition	: none;
 		}
 
-		:host([animation=super-fast]) > #container > li > div.num {
+		:host([animation=super-fast]) > #container > li > div {
 			transition	: -webkit-transform 0.5s ease-in-out;
 			transition	: -moz-transform 0.5s ease-in-out;
 			transition	: -ms-transform 0.5s ease-in-out;
@@ -20,7 +20,7 @@
 			transition	: transform 0.5s ease-in-out;
 		}
 
-		:host([animation=fast]) > #container > li > div.num {
+		:host([animation=fast]) > #container > li > div {
 			transition	: -webkit-transform 1s ease-in-out;
 			transition	: -moz-transform 1s ease-in-out;
 			transition	: -ms-transform 1s ease-in-out;
@@ -28,7 +28,7 @@
 			transition	: transform 1s ease-in-out;
 		}
 
-		:host([animation=slow]) > #container > li > div.num {
+		:host([animation=slow]) > #container > li > div {
 			transition	: -webkit-transform 4s ease-in-out;
 			transition	: -moz-transform 4s ease-in-out;
 			transition	: -ms-transform 4s ease-in-out;
@@ -113,8 +113,8 @@
 				// console.log('value: %s, pattern: %s, hold: %s', this.value, this.pattern, this.hold);
 				var container = this.$.container;
 				var parsedPattern = this._parsedPattern = this.parsePattern(this.pattern);
-				console.log(this.pattern);
-				console.log(parsedPattern);
+				// console.log(this.pattern);
+				// console.log(parsedPattern);
 
 				var maxLength = parsedPattern.length;
 
@@ -129,6 +129,7 @@
 				var stack = [];
 				var states = {};
 				var push = function(input) {
+					if (input === ' ') input = '&nbsp;';
 					if (stack.indexOf(input) >= 0) return;
 					else stack.push(input);
 				};
@@ -163,7 +164,7 @@
 				var s = function(name, tran, fin) {
 					states[name] = {tran: function(input){
 						var to = tran(input);
-						console.log('%s === %s ===> %s', name, input, to);
+						// console.log('%s === %s ===> %s', name, input, to);
 						return to;
 					}, fin: fin};
 					return name;
