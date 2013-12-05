@@ -1,5 +1,5 @@
 <polymer-element name="a-counter"
-		 attributes="value max-length pre post hold">
+		 attributes="value pattern hold">
 
 	<template>
 		<style>
@@ -8,11 +8,11 @@
 			display	: block;
 		}
 
-		:host([animation=none]) > #container > li > div.num {
+		:host([animation=none]) > #container > li > div {
 			transition	: none;
 		}
 
-		:host([animation=super-fast]) > #container > li > div.num {
+		:host([animation=super-fast]) > #container > li > div {
 			transition	: -webkit-transform 0.5s ease-in-out;
 			transition	: -moz-transform 0.5s ease-in-out;
 			transition	: -ms-transform 0.5s ease-in-out;
@@ -20,7 +20,7 @@
 			transition	: transform 0.5s ease-in-out;
 		}
 
-		:host([animation=fast]) > #container > li > div.num {
+		:host([animation=fast]) > #container > li > div {
 			transition	: -webkit-transform 1s ease-in-out;
 			transition	: -moz-transform 1s ease-in-out;
 			transition	: -ms-transform 1s ease-in-out;
@@ -28,7 +28,7 @@
 			transition	: transform 1s ease-in-out;
 		}
 
-		:host([animation=slow]) > #container > li > div.num {
+		:host([animation=slow]) > #container > li > div {
 			transition	: -webkit-transform 4s ease-in-out;
 			transition	: -moz-transform 4s ease-in-out;
 			transition	: -ms-transform 4s ease-in-out;
@@ -74,73 +74,240 @@
 
 	<script>
 		Polymer('a-counter', {
-			value: 0,
-			"max-length": 3,
-			pre: '',
-			post: '',
+			value: '',
+			pattern: '',
 			hold: false,
 			valueChanged: function(oldValue){
-				var newValue = this.value;
-				if (Math.log(newValue)/Math.LN10>this['max-length']) {
+				// console.log('value');
+				if (!this.validateValue(this.value)) {
 					this.value = oldValue;
 					return;
 				}
-
 				this.updateValue();
 			},
-			preChanged: function(oldValue) {
-				var newValue = this.pre;
-				if (oldValue && newValue.length > oldValue.length) {
-					this.pre = newValue.substr(0, oldValue.length);
+			patternChanged: function(oldValue) {
+				// console.log('pattern');
+				var parsed;
+				if (this._parsedPattern) {
 					return;
-				}
-				var childNodes = this.$.container.childNodes;
-				for(var i = 0; i < this.pre.length; i++) {
-					childNodes[i].firstChild.innerHTML = this.pre.charAt(i);
-				}
-			},
-			postChanged: function(oldValue) {
-				var newValue = this.post;
-				if (oldValue && newValue.length > oldValue.length) {
-					this.post = newValue.substr(0, oldValue.length);
-					return;
-				}
-
-				var offset = this['max-length'] + this.pre.length;
-				var childNodes = this.$.container.childNodes;
-				for(var i = 0; i < this.post.length; i++) {
-					childNodes[offset + i].firstChild.innerHTML = this.post.charAt(i);
+				} else if (!(parsed = this.parsePattern(this.pattern))) {
+					if (this.pattern !== oldValue) this.pattern = oldValue;
+				} else {
+					this._parsedPattern = parsed;
 				}
 			},
 			holdChanged: function(oldValue) {
+				// console.log('hold');
 				if (!this.hold) {
 					this.updateValue();
 				}
 			},
 			enteredView: function() {
+				// console.log('enteredView');
 				var container = this.$.container;
 				var style = document.defaultView.getComputedStyle(this);
 				var fontSize = container.style.lineHeight = container.style.height = style.getPropertyValue('font-size');
 			},
 			ready: function() {
+				// console.log('ready');
+				// console.log('value: %s, pattern: %s, hold: %s', this.value, this.pattern, this.hold);
 				var container = this.$.container;
+				var parsedPattern = this._parsedPattern = this.parsePattern(this.pattern);
+				// console.log(this.pattern);
+				// console.log(parsedPattern);
 
-				var maxLength = this['max-length'];
-				var preLength = this.pre.length;
-				var postLength = this.post.length;
+				var maxLength = parsedPattern.length;
 
-				var digits = '<li><div class="num"><div>'+[0,1,2,3,4,5,6,7,8,9].join('</div><div>')+'</div></div></li>';
-				var nums = new Array(maxLength + preLength + postLength);
-				for(var i = 0; i < nums.length; i++) {
-					if (i < preLength) {
-						nums[i] = '<li><div>' + this.pre.charAt(i) + '</div></li>';
-					} else if (i >= preLength + maxLength) {
-						nums[i] = '<li><div>' + this.post.charAt(i - preLength - maxLength) + '</div></li>';
-					} else {
-						nums[i] = digits;
-					}
+				var items = new Array(maxLength);
+				for(var i = 0; i < maxLength; i++) {
+					items[i] = '<li><div><div>'+(parsedPattern[i].join('</div><div>'))+'</div></div></li>';
 				}
-				container.innerHTML = nums.join('');
+				container.innerHTML = items.join('');
+			},
+			parsePattern: function(pattern) {
+				var result = [];
+				var stack = [];
+				var states = {};
+				var push = function(input) {
+					if (input === ' ') input = '&nbsp;';
+					if (stack.indexOf(input) >= 0) return;
+					else stack.push(input);
+				};
+				var range = function() {
+					var toCode = stack.pop().charCodeAt(0);
+					var fromCode = stack.pop().charCodeAt(0);
+					for(var i = fromCode; i <= toCode; i++) {
+						push(String.fromCharCode(i));
+					}
+				};
+				var repeat = function() {
+					var n = parseInt(stack.join(''));
+					var item = result[result.length - 1];
+					for(var i = 0; i < n - 1; i++) {
+						result.push(item);
+					}
+					stack = [];
+				};
+				var save = function() {
+					if (stack.length) {
+						result.push(stack);
+						stack = [];
+					}
+				};
+				var slash = function(name, to, callback) {
+					return s(name, function(input) {
+						push(input);
+						if (callback) callback();
+						return to;
+					},false);
+				};
+				var s = function(name, tran, fin) {
+					states[name] = {tran: function(input){
+						var to = tran(input);
+						// console.log('%s === %s ===> %s', name, input, to);
+						return to;
+					}, fin: fin};
+					return name;
+				};
+				s('e', function(){return 'e'}, false);
+				s('s0', function(input) {
+					switch(input) {
+						case '[':
+						return 's1';
+						case '{':
+						return 'e';	//error
+						case '\\':
+						return slash('s01', 's6', save);
+						default:
+						push(input);
+						save();
+						return 's6';
+					}
+				}, true);
+				s('s1', function(input){
+					switch(input) {
+						case '-':
+						case ']':
+						return 'e';	//error
+						case '\\':
+						return slash('s11', 's2');
+						default:
+						push(input);
+						return 's2';
+					}
+				}, false);
+				s('s2', function(input){
+					switch(input) {
+						case '-':
+						return 's3';
+						case ']':
+						save();
+						return 's6';
+						case '\\':
+						return slash('s21', 's2');
+						default:
+						push(input);
+						return 's2';
+					}
+				}, false);
+				s('s3', function(input){
+					
+					switch(input) {
+						case ']':
+						case '-':
+						return 'e';	// error
+						case '\\':
+						push(input);
+						return slash('s31', 's4', range);
+						default:
+						push(input);
+						range();
+						return 's4';
+					}
+				}, false);
+				s('s4', function(input) {
+					switch(input) {
+						case ']':
+						save();
+						return 's6';
+						case '-':
+						return 'e';
+						case '\\':
+						return slash('s41', 's2');
+						default:
+						push(input);
+						return 's2';
+					}
+				}, false);
+				s('s6', function(input){
+					switch(input) {
+						case '[':
+						return 's1';
+						case '{':
+						save();
+						return 's7';
+						case '\\':
+						return slash('s61', 's6', save);
+						default:
+						push(input);
+						save();
+						return 's6';
+					}
+				}, true);
+				s('s7', function(input){
+					switch(input) {
+						case '0':
+						case '1':
+						case '2':
+						case '3':
+						case '4':
+						case '5':
+						case '6':
+						case '7':
+						case '8':
+						case '9':
+						push(input);
+						return 's8';
+						default:
+						return 'e';	// error
+					}
+				}, false);
+				s('s8', function(input){
+					switch(input) {
+						case '0':
+						case '1':
+						case '2':
+						case '3':
+						case '4':
+						case '5':
+						case '6':
+						case '7':
+						case '8':
+						case '9':
+						push(input);
+						return 's8';
+						case '}':
+						repeat();
+						return 's0';
+						default:
+						return 'e';	// error
+					}
+				}, false);
+				var chars = pattern.split('');
+				var state = states['s0'];
+				for(var i = 0; i < chars.length; i++) {
+					var nextState = state.tran(chars[i]);
+					state = states[nextState];
+				}
+				if (state.fin) {
+					return result;
+				} else {
+					return false;
+				}
+			},
+			validateValue: function(value) {
+				var reg = new RegExp('^' + this.pattern + '$');
+				return reg.test(value);
 			},
 			updateValue: function() {
 				if (this.hold) return;
@@ -148,16 +315,15 @@
 					setTimeout(this.updateValue.bind(this), 100);
 					return;
 				}
-
-				var value = parseInt(this.value);
-				var maxLength = parseInt(this['max-length']);
-				var preLength = this.pre.length;
+				// console.log(this.value);
+				var value = this.value.split('');
+				var parsedPattern = this._parsedPattern;
+				// console.log(parsedPattern);
+				var maxLength = parsedPattern.length;
 				var listItems = this.$.container.childNodes;
 				for(var i = 0; i < maxLength; i++) {
-					var d = value % 10;
-					var el = listItems[maxLength + preLength - 1 - i].firstChild;
-					translateY(el, value % 10);
-					value = Math.floor(value / 10);
+					var el = listItems[i].firstChild;
+					translateY(el, parsedPattern[i].indexOf(value[i]));
 				}
 
 				function translateY(el, value) {
@@ -168,6 +334,15 @@
 					= el.style.transform
 					= 'translateY(-'+(value*10)+'%)';
 				}
+			},
+			rand: function() {
+				var value = [];
+				var parsedPattern = this._parsedPattern;
+				for(var i = 0; i < parsedPattern.length; i++) {
+					var parsed = parsedPattern[i];
+					value[i] = parsed[Math.floor(Math.random() * parsed.length)];
+				}
+				this.value = value.join('');
 			}
 		});
 	</script>
