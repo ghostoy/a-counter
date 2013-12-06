@@ -323,7 +323,7 @@
 				var listItems = this.$.container.childNodes;
 				for(var i = 0; i < maxLength; i++) {
 					var el = listItems[i].firstChild;
-					translateY(el, parsedPattern[i].indexOf(value[i]));
+					translateY(el, parsedPattern[i].indexOf(value[i]) / parsedPattern[i].length);
 				}
 
 				function translateY(el, value) {
@@ -332,7 +332,7 @@
 					= el.style.msTransform
 					= el.style.oTransform
 					= el.style.transform
-					= 'translateY(-'+(value*10)+'%)';
+					= 'translateY(-'+(value*100)+'%)';
 				}
 			},
 			rand: function() {
