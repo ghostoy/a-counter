@@ -1,0 +1,24 @@
+{
+  "name": "a-counter",
+  "version": "0.0.2",
+  "homepage": "https://ghostoy.github.io/a-counter/",
+  "authors": [
+    "Cong Liu <leehom2001@gmail.com>"
+  ],
+  "description": "Animated counter based on Polymer",
+  "main": "src/a-counter.html",
+  "keywords": [
+    "polymer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "~0.2.3"
+  }
+}

@@ -1,3 +1,5 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
 <polymer-element name="a-counter"
 		 attributes="value pattern hold">
 
@@ -78,7 +80,6 @@
 			pattern: '',
 			hold: false,
 			valueChanged: function(oldValue){
-				// console.log('value');
 				if (!this.validateValue(this.value)) {
 					this.value = oldValue;
 					return;
@@ -86,7 +87,6 @@
 				this.updateValue();
 			},
 			patternChanged: function(oldValue) {
-				// console.log('pattern');
 				var parsed;
 				if (this._parsedPattern) {
 					return;
@@ -97,24 +97,18 @@
 				}
 			},
 			holdChanged: function(oldValue) {
-				// console.log('hold');
 				if (!this.hold) {
 					this.updateValue();
 				}
 			},
 			enteredView: function() {
-				// console.log('enteredView');
 				var container = this.$.container;
 				var style = document.defaultView.getComputedStyle(this);
 				var fontSize = container.style.lineHeight = container.style.height = style.getPropertyValue('font-size');
 			},
 			ready: function() {
-				// console.log('ready');
-				// console.log('value: %s, pattern: %s, hold: %s', this.value, this.pattern, this.hold);
 				var container = this.$.container;
 				var parsedPattern = this._parsedPattern = this.parsePattern(this.pattern);
-				// console.log(this.pattern);
-				// console.log(parsedPattern);
 
 				var maxLength = parsedPattern.length;
 
@@ -315,10 +309,10 @@
 					setTimeout(this.updateValue.bind(this), 100);
 					return;
 				}
-				// console.log(this.value);
+
 				var value = this.value.split('');
 				var parsedPattern = this._parsedPattern;
-				// console.log(parsedPattern);
+				
 				var maxLength = parsedPattern.length;
 				var listItems = this.$.container.childNodes;
 				for(var i = 0; i < maxLength; i++) {

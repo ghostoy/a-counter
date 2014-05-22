@@ -1,6 +1,6 @@
 # &lt;a-counter&gt;
 
-TODO: Write a project description
+Animated counter based on Polymer
 
 > Maintained by [Cong Liu](https://github.com/ghostoy).
 
@@ -13,16 +13,10 @@ TODO: Write a project description
 1. Import Web Components' polyfill:
 
 	```html
-	<script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20131025/polymer.min.js"></script>
+	<script src="bower_components/platform/platform.js"></script>
 	```
 
-2. Import Custom Element:
-
-	```html
-	<link rel="import" href="src/a-counter.html">
-	```
-
-3. Start using it!
+2. Start using it!
 
 	```html
 	<a-counter></a-counter>
@@ -32,12 +26,10 @@ TODO: Write a project description
 
 Attribute  | Options                   | Default             | Description
 ---        | ---                       | ---                 | ---
-`value`    | *int*                     | `0`                 | Value to display on the counter
-`max-length`| *int*				 	   | `3`               	 | Max length in digits
-`pre`      | *string*                  | `""`                | String to be displayed before the number
-`post`     | *string*                  | `""`                | String to be displayed after the number
+`value`    | *string*                  | `""`                | Value to display on the counter
+`pattern`  | *string*				   | `"[0-9]{10}"`       | Pattern of the value in format of regular expression
 `hold`     | *boolean*                 | `false`             | Hold the animation on loaded or after the value changed.
-`animation`| *string*				   | `normal`			 | Speed of animation: slow (4s), normal (2s), fast (1s)
+`animation`| *string*				   | `normal`			 | Speed of animation: slow (4s), normal (2s), fast (1s), super-fast (0.5s), none (no animation)
 
 ## Contributing
 
@@ -48,7 +40,8 @@ Attribute  | Options                   | Default             | Description
 5. Submit a pull request :D
 
 ## History
-
+* v0.0.2 May 22, 2014
+	* Updated to bower version of Polymer 0.2.3
 * v0.0.1 Nov 7, 2013
 	* Started project using [boilerplate-element](https://github.com/customelements/boilerplate-element)
 
